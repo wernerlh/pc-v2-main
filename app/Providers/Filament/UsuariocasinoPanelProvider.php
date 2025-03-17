@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\VerificarCuentaActiva;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -48,7 +49,6 @@ class UsuariocasinoPanelProvider extends PanelProvider
                 MisDepositos::class,
                 MisRetiros::class,
 
-              
             ])
             ->discoverWidgets(in: app_path('Filament/Usuariocasino/Widgets'), for: 'App\\Filament\\Usuariocasino\\Widgets')
             ->widgets([
@@ -65,9 +65,13 @@ class UsuariocasinoPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                VerificarCuentaActiva::class,
+
             ])
             ->authMiddleware([
                 Authenticate::class,
+                VerificarCuentaActiva::class,
+
             ])
             ->authGuard('cliente');
     }

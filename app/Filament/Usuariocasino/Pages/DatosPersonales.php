@@ -10,6 +10,9 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
 
 class DatosPersonales extends Page
 {
@@ -47,32 +50,36 @@ class DatosPersonales extends Page
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nombre_completo')
-                    ->required()
-                    ->maxLength(200)
-                    ->label('Nombre Completo'),
-                Forms\Components\TextInput::make('telefono')
-                    ->unique(UserCliente::class, 'telefono', ignoreRecord: true)
-                    ->nullable()
-                    ->required()
-                    ->maxLength(15)
-                    ->label('Telefono'),
-                Forms\Components\TextInput::make('direccion')
-                    ->nullable()
-                    ->required()
-                    ->maxLength(200)
-                    ->label('Direccion'),
-                Forms\Components\DatePicker::make('fecha_nacimiento')
-                    ->required()
-                    ->label('Fecha de Nacimiento'),
-                Forms\Components\TextInput::make('documento_identidad')
-                    ->unique(UserCliente::class, 'documento_identidad', ignoreRecord: true)
-                    ->maxLength(20)
-                    ->label('Documento de identidad')
-                    ->required(),
-                Forms\Components\Section::make('Verificación de Seguridad')
+                Section::make('Cambiar Datos Personales')
                     ->schema([
-                        Forms\Components\TextInput::make('password_actual')
+                        TextInput::make('nombre_completo')
+                            ->required()
+                            ->maxLength(200)
+                            ->label('Nombre Completo'),
+                        TextInput::make('telefono')
+                            ->unique(UserCliente::class, 'telefono', ignoreRecord: true)
+                            ->nullable()
+                            ->required()
+                            ->maxLength(15)
+                            ->label('Telefono'),
+                        TextInput::make('direccion')
+                            ->nullable()
+                            ->required()
+                            ->maxLength(200)
+                            ->label('Direccion'),
+                        DatePicker::make('fecha_nacimiento')
+                            ->required()
+                            ->label('Fecha de Nacimiento'),
+                        TextInput::make('documento_identidad')
+                            ->unique(UserCliente::class, 'documento_identidad', ignoreRecord: true)
+                            ->maxLength(20)
+                            ->label('Documento de identidad')
+                            ->required(),
+                    ]),
+
+                Section::make('Verificación de Seguridad')
+                    ->schema([
+                        TextInput::make('password_actual')
                             ->password()
                             ->required()
                             ->label('Contraseña Actual')
@@ -86,11 +93,11 @@ class DatosPersonales extends Page
     {
         // Validar y obtener los datos del formulario
         $data = $this->form->getState();
-        
+
         // Obtener el usuario autenticado
         $userId = Auth::guard('cliente')->id();
         $user = UserCliente::find($userId);
-        
+
         // Verificar que la contraseña ingresada sea correcta
         if (!$user || !Hash::check($data['password_actual'], $user->password)) {
             // Si la contraseña no coincide, mostrar un error
@@ -98,11 +105,11 @@ class DatosPersonales extends Page
                 ->title('Contraseña incorrecta')
                 ->danger()
                 ->send();
-                
+
             // Detener la ejecución
             return;
         }
-        
+
         if ($user) {
             // Actualizar los campos del usuario
             $user->nombre_completo = $data['nombre_completo'];
@@ -110,10 +117,10 @@ class DatosPersonales extends Page
             $user->direccion = $data['direccion'];
             $user->fecha_nacimiento = $data['fecha_nacimiento'];
             $user->documento_identidad = $data['documento_identidad'];
-            
+
             // Guardar los cambios
             $user->save();
-            
+
             // Mostrar notificación de éxito
             Notification::make()
                 ->title('Datos actualizados con éxito')

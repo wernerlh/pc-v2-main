@@ -21,6 +21,8 @@ class JuegoBlackjack extends Page
     use InteractsWithForms;
     use VerificaMembresiasTrait;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
     protected static ?string $title = 'Blackjack / 21';
     protected static ?string $navigationLabel = 'Jugar Blackjack';

@@ -39,9 +39,13 @@ class JuegosOnline extends Model
     {
         return $this->belongsTo(CategoriasJuego::class, 'categoria_id');
     }
+    // Añadir esta relación como alias para mantener compatibilidad
+    public function categoria(): BelongsTo
+    {
+        return $this->belongsTo(CategoriasJuego::class, 'categoria_id');
+    }
     public function membresiaRequerida(): BelongsTo
     {
         return $this->belongsTo(Membresia::class, 'membresia_requerida');
     }
-
 }

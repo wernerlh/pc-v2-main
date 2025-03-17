@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('estado', ['PRESENTE', 'AUSENTE', 'TARDANZA', 'PERMISO']);
             $table->text('observaciones')->nullable();
             $table->timestamps();
-
+            
             $table->foreign('empleado_id')->references('empleado_id')->on('empleados');
             $table->unique(['empleado_id', 'fecha']);
         });

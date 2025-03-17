@@ -12,15 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Illuminate\Support\Facades\Hash;
-use Filament\Forms\Components\Textarea;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DateTimePicker; // Cambiar el import
+
+
 
 class UserClienteResource extends Resource
 {
@@ -42,16 +38,21 @@ class UserClienteResource extends Resource
                 Select::make('estado_cuenta') // Nuevo campo para el estado de la cuenta
                     ->options([
                         'activa' => 'Activa',
-                        'inactiva' => 'Inactiva',
                         'suspendida' => 'Suspendida',
                         'bloqueada' => 'Bloqueada',
                     ])
                     ->default('activa')
                     ->required()
                     ->live(), // Habilita la reactividad en tiempo real
-                DatePicker::make('fecha_suspension') // Campo para la fecha de suspensión
+                DateTimePicker::make('fecha_suspension')
                     ->label('Fecha de Suspensión')
                     ->nullable()
+                    ->seconds() // Esto activa la selección de segundos
+                    ->displayFormat('d/m/Y H:i:s') // Formato de visualización con segundos
+                    ->native(false) // Usar el selector personalizado en lugar del nativo del navegador
+                    ->hoursStep(1) // Paso para las horas (opcional)
+                    ->minutesStep(1) // Paso para los minutos (opcional)
+                    ->secondsStep(1) // Paso para los segundos (opcional)
                     ->visible(function (Forms\Get $get) {
                         return $get('estado_cuenta') === 'suspendida'; // Solo visible si el estado es "suspendida"
                     }),
@@ -97,12 +98,13 @@ class UserClienteResource extends Resource
                     ->label('Fecha de Nacimiento')
                     ->searchable()
                     ->sortable(),
- 
+
                 TextColumn::make('estado_cuenta') // Nuevo campo en la tabla
                     ->label('Estado de Cuenta'),
+
                 TextColumn::make('fecha_suspension') // Nuevo campo en la tabla
                     ->label('Fecha de Suspensión')
-                    ->date()
+                    ->dateTime('d/m/Y H:i:s T')
                     ->searchable()
                     ->sortable(),
 

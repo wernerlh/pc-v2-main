@@ -76,13 +76,13 @@ class AsistenciaEmpleadosResource extends Resource
                         }
                     }),
 
-                    TextInput::make('horas_trabajadas')
+                TextInput::make('horas_trabajadas')
                     ->label('Horas Trabajadas')
                     ->numeric()
                     ->step(0.01)
                     ->disabled()
                     ->dehydrated(true), // Importante: esto asegura que el valor se guarde en la BD
-                    
+
                 Select::make('tipo_jornada')
                     ->label('Tipo de Jornada')
                     ->options([

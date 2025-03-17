@@ -5,11 +5,11 @@ namespace App\Filament\Usuariocasino\Pages;
 use App\Models\BilleteraCliente;
 use App\Models\ClienteMembresia;
 use App\Models\JuegosOnline;
+use App\Models\CategoriasJuego;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use Filament\Notifications\Notification;
-use Filament\Support\Exceptions\Halt;
-use Illuminate\Database\Eloquent\Collection;
+
 use Carbon\Carbon;
 
 
@@ -54,8 +54,10 @@ class JuegosCasino extends Page
 
     protected function loadJuegos(): void
     {
-        // Cargar todos los juegos activos
-        $this->juegos = JuegosOnline::where('estado', 'activo')->get();
+        // Cargar todos los juegos activos con sus categorías
+        $this->juegos = JuegosOnline::with('categoria')
+            ->where('estado', 'activo')
+            ->get();
     }
 
     protected function loadUserInfo(): void

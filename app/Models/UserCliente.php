@@ -56,6 +56,7 @@ class UserCliente extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'preferencias' => 'array',
+        'fecha_suspension' => 'datetime',
     ];    
 
     /**

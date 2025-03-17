@@ -22,6 +22,8 @@ class JuegoCaraYSello extends Page
     use InteractsWithForms;
     use VerificaMembresiasTrait; // Usar el trait
 
+    protected static bool $shouldRegisterNavigation = false; // Añadir esta línea
+
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
     protected static ?string $title = 'Cara y Sello';
     protected static ?string $navigationLabel = 'Jugar Cara y Sello';

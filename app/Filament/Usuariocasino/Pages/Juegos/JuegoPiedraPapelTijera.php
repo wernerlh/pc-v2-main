@@ -23,6 +23,8 @@ class JuegoPiedraPapelTijera extends Page
     use InteractsWithForms;
     use VerificaMembresiasTrait; // Usar el trait
 
+    protected static bool $shouldRegisterNavigation = false; // Añadir esta línea
+
     protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
     protected static ?string $title = 'Piedra, Papel o Tijera';
     protected static ?string $navigationLabel = 'Jugar Piedra, Papel o Tijera';
