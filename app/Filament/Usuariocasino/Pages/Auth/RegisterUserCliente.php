@@ -3,12 +3,13 @@
 namespace App\Filament\Usuariocasino\Pages\Auth;
 
 use Filament\Pages\Auth\Register as BaseRegister;
-use Filament\Forms;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use App\Models\UserCliente;
 use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 
 class RegisterUserCliente extends BaseRegister
 {
@@ -21,47 +22,54 @@ class RegisterUserCliente extends BaseRegister
 
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(16)
-                    ->regex('/^[a-z0-9]{8,16}$/')
-                    ->label('Nombre de Usuario')
-                    ->unique(UserCliente::class, 'name') ,
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->unique(UserCliente::class, 'email')
                     ->maxLength(100)
                     ->label('Correo Electronico'),
-                Forms\Components\TextInput::make('nombre_completo')
+                TextInput::make('name')
+                    ->required()
+                    ->minLength(8)
+                    ->maxLength(16)
+                    ->regex('/^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,16}$/')
+                    ->label('Nombre de Usuario')
+                    ->unique(UserCliente::class, 'name')
+                    ->helperText('Debe tener al menos 8 caracteres, incluir al menos una letra minúscula y un número (no debe contener espacios).'),
+                TextInput::make('nombre_completo')
                     ->required()
                     ->maxLength(200)
                     ->label('Nombre Completo'),
-                Forms\Components\TextInput::make('telefono')
-                ->unique(UserCliente::class, 'telefono')
-                    ->nullable()
+                TextInput::make('telefono')
+                    ->unique(UserCliente::class, 'telefono')
                     ->required()
-                    ->maxLength(15)
-                    ->label('Telefono'),
-                Forms\Components\TextInput::make('direccion')
+                    ->regex('/^[0-9]{9}$/')
+                    ->label('Telefono')
+                    ->helperText('Debe contener exactamente 9 dígitos numéricos.'),
+                TextInput::make('direccion')
                     ->nullable()
                     ->required()
                     ->maxLength(200)
                     ->label('Direccion'),
-                Forms\Components\DatePicker::make('fecha_nacimiento')
+                DatePicker::make('fecha_nacimiento')
                     ->required()
-                    ->label('Fecha de Nacimiento'),
-                Forms\Components\TextInput::make('documento_identidad')
+                    ->label('Fecha de Nacimiento')
+                    ->maxDate(now()->subYears(18)) // Fecha máxima es hoy menos 18 años
+                    ->helperText('Debes tener al menos 18 años para registrarte.'),
+                TextInput::make('documento_identidad')
                     ->unique(UserCliente::class, 'documento_identidad')
-                    ->maxLength(20)
+                    ->required()
+                    ->regex('/^[0-9]{8}$/')
+                    ->maxLength(8)
                     ->label('Documento de identidad')
-                    ->required(),
-                Forms\Components\TextInput::make('password')
+                    ->helperText('Debe contener exactamente 8 dígitos numéricos.'),
+                TextInput::make('password')
                     ->password()
                     ->required()
-                    ->maxLength(255)
-                    ->label('Contraseña'),
-                Forms\Components\TextInput::make('password_confirmation')
+                    ->label('Contraseña')
+                    ->rule(Password::min(8)->mixedCase()->numbers()->symbols())
+                    ->helperText('La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas, números y símbolos.'),
+                TextInput::make('password_confirmation')
                     ->password()
                     ->required()
                     ->same('password')
@@ -86,14 +94,14 @@ class RegisterUserCliente extends BaseRegister
     protected function validator(array $data): \Illuminate\Contracts\Validation\Validator
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:16', 'regex:/^[a-z0-9]{8,16}$/'],
+            'name' => ['required', 'string', 'min:8', 'max:16', 'regex:/^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,16}$/'],
             'nombre_completo' => ['required', 'string', 'max:200'],
-            'telefono' => ['nullable', 'string', 'max:15'],
+            'telefono' => ['required', 'string', 'regex:/^[0-9]{9}$/'],
             'direccion' => ['nullable', 'string', 'max:200'],
             'fecha_nacimiento' => ['required', 'date'],
             'documento_identidad' => ['required', 'string', 'max:20', 'unique:user_clientes,documento_identidad'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:user_clientes,email'],
-            'password' => ['required', 'string', Password::defaults(), 'confirmed'],
+            'password' => ['required', 'string', Password::min(8)->mixedCase()->numbers()->symbols(), 'confirmed'],
         ]);
     }
 }

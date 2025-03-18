@@ -3,7 +3,7 @@
 namespace App\Filament\Usuariocasino\Pages;
 
 use App\Models\UserCliente;
-use Filament\Forms;
+
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
+
 
 class DatosPersonales extends Page
 {
@@ -57,11 +58,10 @@ class DatosPersonales extends Page
                             ->maxLength(200)
                             ->label('Nombre Completo'),
                         TextInput::make('telefono')
-                            ->unique(UserCliente::class, 'telefono', ignoreRecord: true)
-                            ->nullable()
                             ->required()
-                            ->maxLength(15)
-                            ->label('Telefono'),
+                            ->regex('/^[0-9]{9}$/')
+                            ->label('Telefono')
+                            ->helperText('Debe contener exactamente 9 dígitos numéricos.'),
                         TextInput::make('direccion')
                             ->nullable()
                             ->required()
@@ -69,12 +69,15 @@ class DatosPersonales extends Page
                             ->label('Direccion'),
                         DatePicker::make('fecha_nacimiento')
                             ->required()
-                            ->label('Fecha de Nacimiento'),
+                            ->label('Fecha de Nacimiento')
+                            ->maxDate(now()->subYears(18))
+                            ->helperText('Debes tener al menos 18 años.'),
                         TextInput::make('documento_identidad')
-                            ->unique(UserCliente::class, 'documento_identidad', ignoreRecord: true)
-                            ->maxLength(20)
+                            ->required()
+                            ->regex('/^[0-9]{8}$/')
+                            ->maxLength(8)
                             ->label('Documento de identidad')
-                            ->required(),
+                            ->helperText('Debe contener exactamente 8 dígitos numéricos.'),
                     ]),
 
                 Section::make('Verificación de Seguridad')

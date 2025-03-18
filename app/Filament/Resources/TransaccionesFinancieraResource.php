@@ -18,13 +18,12 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 
 class TransaccionesFinancieraResource extends Resource
 {
     protected static ?string $model = TransaccionesFinanciera::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     protected static ?string $navigationLabel = 'Transacciones Financieras';
     protected static ?string $modelLabel = 'Transacción Financiera';

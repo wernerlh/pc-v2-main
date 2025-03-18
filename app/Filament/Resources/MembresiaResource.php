@@ -21,7 +21,7 @@ class MembresiaResource extends Resource
 {
     protected static ?string $model = Membresia::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationIcon = 'heroicon-m-star';
     protected static ?string $navigationLabel = 'Membresías';
     protected static ?string $modelLabel = 'Membresía';
     protected static ?string $pluralModelLabel = 'Membresías';
@@ -35,23 +35,28 @@ class MembresiaResource extends Resource
                 TextInput::make('nombre')
                     ->label('Nombre')
                     ->required()
-                    ->maxLength(100),
+                    ->maxLength(100)
+                    ->columnSpanFull(),
                 Textarea::make('descripcion')
                     ->label('Descripción')
+                    ->required()
                     ->maxLength(500)
                     ->columnSpanFull(),
                 Textarea::make('beneficios')
                     ->label('Beneficios')
+                    ->required()
                     ->columnSpanFull(),
                 TextInput::make('descuento_porcentaje')
                     ->label('Descuento (%)')
                     ->numeric()
+                    ->required()
                     ->default(0)
                     ->minValue(0)
                     ->maxValue(100),
                 TextInput::make('precio')
                     ->label('Precio')
                     ->numeric()
+                    ->required()
                     ->default(0)
                     ->minValue(0),
             ]);

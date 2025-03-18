@@ -8,6 +8,7 @@ use App\Models\Departamentos;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Textarea;
 
 
 use Filament\Forms\Form;
@@ -20,7 +21,7 @@ class DepartamentosResource extends Resource
 {
     protected static ?string $model = Departamentos::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
     protected static ?string $navigationLabel = 'Departamentos';
     protected static ?string $modelLabel = 'Departamento';
     protected static ?string $pluralModelLabel = 'Departamentos';
@@ -36,16 +37,20 @@ class DepartamentosResource extends Resource
                 TextInput::make('nombre')
                     ->label('Nombre del departamento')
                     ->required()
-                    ->maxLength(100),
-                TextInput::make('descripcion')
+                    ->unique()
+                    ->maxLength(100)
+                    ->columnSpanFull(),
+                Textarea::make('descripcion')
                     ->label('Descripcion del departamento')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Select::make('gerente_id')
                     ->label('Gerente')
                     ->relationship('gerente', 'nombre_completo')
                     ->searchable()
-                    ->nullable(),
+                    ->nullable()
+                    ->columnSpanFull(),
             ]);
     }
 

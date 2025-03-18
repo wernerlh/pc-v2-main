@@ -36,21 +36,27 @@ class CategoriasJuegoResource extends Resource
                 TextInput::make('nombre')
                     ->label('Nombre de la categoría')
                     ->required()
-                    ->maxLength(100),
+                    ->maxLength(100)
+                    ->columnSpanFull(),
                 Textarea::make('descripcion')
                     ->label('Descripción')
+                    ->required()
                     ->maxLength(500)
                     ->columnSpanFull(),
                 TextInput::make('imagen_url')
                     ->label('URL de la Imagen')
                     ->url()
+                    ->required()
                     ->columnSpanFull(),
                 TextInput::make('orden')
                     ->label('Orden de Visualización')
                     ->numeric()
+                    ->required()
+                    ->unique()
                     ->default(0),
                 Select::make('estado')
                     ->label('Estado')
+                    ->required()
                     ->options([
                         'activo' => 'Activo',
                         'inactivo' => 'Inactivo',

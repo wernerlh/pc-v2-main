@@ -42,27 +42,36 @@ class EmpleadosResource extends Resource
             ->schema([
                 TextInput::make('nombre_completo')
                     ->label('Nombre Completo')
+
                     ->required()
                     ->maxLength(100),
                 TextInput::make('documento_identidad')
                     ->label('Documento de Identidad')
                     ->required()
-                    ->unique()
+                    ->unique(ignorable: fn ($record) => $record)
                     ->maxLength(20),
                 TextInput::make('correo')
                     ->label('Correo Electrónico')
+                    ->suffix('@casino.pe')
                     ->required()
-                    ->email()
-                    ->unique()
-                    ->maxLength(100),
+                    ->unique(ignorable: fn($record) => $record)
+                    ->helperText('Solo ingresa la parte antes de @casino.pe')
+                    ->afterStateHydrated(function ($component, $state) {
+                        // Eliminar el dominio si ya está presente en la base de datos
+                        if (str_ends_with($state, '@casino.pe')) {
+                            $component->state(str_replace('@casino.pe', '', $state));
+                        }
+                    })
+                    ->dehydrateStateUsing(fn($state) => $state . '@casino.pe')
+                    ->maxLength(255),
                 TextInput::make('telefono')
                     ->label('Teléfono')
+                    ->unique(ignorable: fn ($record) => $record)
                     ->required()
                     ->nullable()
                     ->maxLength(15),
                 TextInput::make('cargo')
                     ->label('Cargo de trabajo')
-
                     ->required()
                     ->maxLength(100),
                 DatePicker::make('fecha_contratacion')
@@ -70,6 +79,7 @@ class EmpleadosResource extends Resource
                     ->required(),
                 DatePicker::make('fecha_nacimiento')
                     ->label('Fecha de Nacimiento')
+                    ->maxDate(now()->subYears(18))
                     ->required(),
                 Select::make('estado')
                     ->label('Estado de trabajo')
@@ -106,9 +116,9 @@ class EmpleadosResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('row_number')
-                ->label('N°')
-                ->rowIndex()
-                ->sortable(),
+                    ->label('N°')
+                    ->rowIndex()
+                    ->sortable(),
 
                 TextColumn::make('nombre_completo')
                     ->label('Nombre')

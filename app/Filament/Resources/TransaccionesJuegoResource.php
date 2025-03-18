@@ -8,12 +8,9 @@ use App\Models\TransaccionesJuego;
 use App\Models\UserCliente;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -22,7 +19,7 @@ class TransaccionesJuegoResource extends Resource
 {
     protected static ?string $model = TransaccionesJuego::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationLabel = 'Transacciones de Juego';
     protected static ?string $modelLabel = 'Transacción de Juego';
     protected static ?string $pluralModelLabel = 'Transacciones de Juego';

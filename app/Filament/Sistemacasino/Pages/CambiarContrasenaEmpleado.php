@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Usuariocasino\Pages;
+namespace App\Filament\Sistemacasino\Pages;
 
-use App\Models\UserCliente;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
@@ -14,8 +14,7 @@ use Illuminate\Validation\Rules\Password;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
 
-
-class CambiarContrasena extends Page
+class CambiarContrasenaEmpleado extends Page
 {
     use InteractsWithForms;
 
@@ -23,8 +22,8 @@ class CambiarContrasena extends Page
     protected static ?string $title = 'Cambiar Contraseña';
     protected static ?string $navigationLabel = 'Cambiar Contraseña';
     protected static ?string $navigationGroup = 'Perfil';
-    
-    protected static string $view = 'filament.usuariocasino.pages.cambiar-contrasena';
+
+    protected static string $view = 'filament.sistemacasino.pages.cambiar-contrasena';
     
     public ?array $data = [];
     
@@ -66,9 +65,9 @@ class CambiarContrasena extends Page
         // Validar y obtener los datos del formulario
         $data = $this->form->getState();
         
-        // Obtener el usuario autenticado
-        $userId = Auth::guard('cliente')->id();
-        $user = UserCliente::find($userId);
+        // Obtener el usuario autenticado (usando el guard predeterminado para el panel de administración)
+        $userId = Auth::id();
+        $user = User::find($userId);
         
         // Verificar que la contraseña actual sea correcta
         if (!$user || !Hash::check($data['password_actual'], $user->password)) {

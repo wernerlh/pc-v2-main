@@ -28,8 +28,7 @@ class JuegosOnlineResource extends Resource
 {
     protected static ?string $model = JuegosOnline::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-puzzle-piece';
     protected static ?string $navigationLabel = 'Juegos Online';
     protected static ?string $modelLabel = 'Juego Online';
     protected static ?string $pluralModelLabel = 'Juegos Online';
@@ -107,6 +106,7 @@ class JuegosOnlineResource extends Resource
                     ->required(),
                 Textarea::make('descripcion')
                     ->label('Descripción')
+                    ->required()
                     ->maxLength(500)
                     ->columnSpanFull(),
                 Select::make('pagina_juego')
@@ -121,6 +121,7 @@ class JuegosOnlineResource extends Resource
                     ->helperText('Seleccione el juego que desea asociar'),
                 TextInput::make('imagen_url')
                     ->label('URL de la imagen')
+                    ->required()
                     ->url()
                     ->maxLength(255),
                 Select::make('membresia_requerida')
@@ -129,6 +130,7 @@ class JuegosOnlineResource extends Resource
                     ->searchable(),
                 Select::make('estado')
                     ->label('Estado')
+                    ->required()
                     ->options([
                         'activo' => 'Activo',
                         'inactivo' => 'Inactivo',

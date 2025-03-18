@@ -53,7 +53,6 @@ class ClienteMembresiaResource extends Resource
                     ->label('Estado')
                     ->options([
                         'activa' => 'Activa',
-                        'inactiva' => 'Inactiva',
                         'vencida' => 'Vencida',
                         'suspendida' => 'Suspendida',
                     ])
