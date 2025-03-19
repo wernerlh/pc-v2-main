@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sucursales extends Model
 {
@@ -50,5 +51,9 @@ class Sucursales extends Model
     public function empleados()
     {
         return $this->hasMany(Empleados::class, 'sucursal_id');
+    }
+    public function TransaccionesCasinoP(): HasMany
+    {
+        return $this->hasMany(TransaccionesCasinoP::class);
     }
 }

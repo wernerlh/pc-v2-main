@@ -30,7 +30,6 @@ class TransaccionesFinancieraResource extends Resource
     protected static ?string $pluralModelLabel = 'Transacciones Financieras';
     protected static ?string $navigationGroup = 'Gestión Financiera';
     protected static ?int $navigationSort = 2;
-    protected static ?string $slug = 'usuariocasino/transacciones-financieras';
 
     public static function form(Form $form): Form
     {

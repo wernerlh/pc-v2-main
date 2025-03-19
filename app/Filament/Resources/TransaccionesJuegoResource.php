@@ -20,12 +20,11 @@ class TransaccionesJuegoResource extends Resource
     protected static ?string $model = TransaccionesJuego::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-    protected static ?string $navigationLabel = 'Transacciones de Juego';
+    protected static ?string $navigationLabel = 'Transacciones de Juegos online';
     protected static ?string $modelLabel = 'Transacción de Juego';
-    protected static ?string $pluralModelLabel = 'Transacciones de Juego';
+    protected static ?string $pluralModelLabel = 'Transacciones de Juegos online';
     protected static ?string $navigationGroup = 'Gestión Financiera';
     protected static ?int $navigationSort = 1;
-    protected static ?string $slug = 'usuariocasino/transacciones-juego';
 
     public static function form(Form $form): Form
     {

@@ -44,7 +44,7 @@ class UserResource extends Resource
                     ->label('Seleccione un Empleado')
                     ->relationship('empleado', 'nombre_completo') // Relación con el modelo Empleado
                     ->searchable()
-                    ->unique(ignorable: fn ($record) => $record) // Ignora el registro actual en validaciones de unicidad
+                    ->unique(ignorable: fn($record) => $record) // Ignora el registro actual en validaciones de unicidad
                     ->required()
                     ->preload()
                     ->live() // Hace que el campo sea reactivo
@@ -109,6 +109,13 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->dehydrateStateUsing(fn($state) => Hash::make($state)), // Encripta la contraseña
+
+                // Using Select Component
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
 
             ]);
     }

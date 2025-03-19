@@ -29,6 +29,10 @@ class SeguridadcasinoPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Red,
             ])
+            ->plugins([
+                \FilipFonal\FilamentLogManager\FilamentLogManager::make(),
+                \TomatoPHP\FilamentLogger\FilamentLoggerPlugin::make(),
+            ])
             ->discoverResources(in: app_path('Filament/Seguridadcasino/Resources'), for: 'App\\Filament\\Seguridadcasino\\Resources')
             ->discoverPages(in: app_path('Filament/Seguridadcasino/Pages'), for: 'App\\Filament\\Seguridadcasino\\Pages')
             ->pages([
