@@ -6,7 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
+
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -17,7 +17,12 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+
 use App\Filament\Sistemacasino\Pages\CambiarContrasenaEmpleado;
+use App\Filament\Sistemacasino\Pages\SistemaDashboard;
+use App\Filament\Sistemacasino\Pages\ReporteAsistencia;
+use App\Filament\Sistemacasino\Pages\ReporteTransaccionesFinancieras;
+use App\Filament\Sistemacasino\Pages\ReporteTransaccionesCasino;
 
 class SistemacasinoPanelProvider extends PanelProvider
 {
@@ -36,9 +41,13 @@ class SistemacasinoPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+
             ->pages([
-                Pages\Dashboard::class,
+                SistemaDashboard::class, // Reemplaza el Dashboard predeterminado
                 CambiarContrasenaEmpleado::class,
+                ReporteAsistencia::class,
+                ReporteTransaccionesFinancieras::class,
+                ReporteTransaccionesCasino::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
