@@ -31,33 +31,41 @@ class ReporteTransaccionesFinancieras extends Page implements HasForms, HasTable
 
     public ?array $data = [];
     public $registros = [];
-    public $totalMonto = 0;
+    public $totalDepositos = 0;
+    public $totalRetiros = 0;
 
     public function mount(): void
     {
         $this->form->fill([
-            'tipo' => 'deposito', // Valor predeterminado: depósito
+            'tipo' => 'todos',
+            'fecha_inicio' => now()->startOfMonth()->format('Y-m-d'),
+            'fecha_fin' => now()->format('Y-m-d'),
         ]);
+
+        // Inicializar registros como array vacío
+        $this->registros = [];
     }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Select::make('tipo')
-                    ->label('Tipo de Transacción')
-                    ->options([
-                        'deposito' => 'Depósitos',
-                        'retiro' => 'Retiros',
-                    ])
-                    ->required(),
-
                 Select::make('cliente_id')
                     ->label('Cliente')
                     ->options(UserCliente::query()->pluck('nombre_completo', 'id'))
                     ->searchable()
                     ->preload()
                     ->placeholder('Todos los clientes'),
+
+                Select::make('tipo')
+                    ->label('Tipo de transacción')
+                    ->options([
+                        'todos' => 'Todos los tipos',
+                        'deposito' => 'Solo Depósitos',
+                        'retiro' => 'Solo Retiros',
+                    ])
+                    ->default('todos')
+                    ->required(),
 
                 DatePicker::make('fecha_inicio')
                     ->label('Desde')
@@ -79,7 +87,7 @@ class ReporteTransaccionesFinancieras extends Page implements HasForms, HasTable
             ->query(
                 TransaccionesFinanciera::query()
                     ->when(
-                        isset($this->data['tipo']),
+                        isset($this->data['tipo']) && $this->data['tipo'] != 'todos',
                         fn($query) => $query->where('tipo', $this->data['tipo'])
                     )
                     ->whereIn('estado', ['completada', 'completado'])
@@ -98,33 +106,29 @@ class ReporteTransaccionesFinancieras extends Page implements HasForms, HasTable
             ->columns([
                 TextColumn::make('cliente.nombre_completo')
                     ->label('Cliente')
-
                     ->searchable(),
+
+                TextColumn::make('tipo')
+                    ->label('Tipo')
+                    ->formatStateUsing(fn (string $state): string => $state == 'deposito' ? 'Depósito' : 'Retiro'),
 
                 TextColumn::make('monto')
                     ->label('Monto')
-                    ->money('PEN')
-                ,
+                    ->money('PEN'),
 
                 TextColumn::make('banco')
                     ->label('Banco'),
 
                 TextColumn::make('estado')
-                    ->label('Estado de Transacción')
-                ,
+                    ->label('Estado de Transacción'),
 
                 TextColumn::make('fecha_solicitud')
                     ->label('Fecha de Solicitud')
-                    ->date('d/m/Y')
-                ,
+                    ->date('d/m/Y'),
 
                 TextColumn::make('fecha_procesamiento')
                     ->label('Fecha de Procesamiento')
-                    ->date('d/m/Y')
-                ,
-
-
-
+                    ->date('d/m/Y'),
             ]);
     }
 
@@ -133,8 +137,11 @@ class ReporteTransaccionesFinancieras extends Page implements HasForms, HasTable
         $this->validate();
 
         $query = TransaccionesFinanciera::with('cliente')
-            ->where('tipo', $this->data['tipo'])
             ->whereIn('estado', ['completada', 'completado'])
+            ->when(
+                isset($this->data['tipo']) && $this->data['tipo'] != 'todos',
+                fn($query) => $query->where('tipo', $this->data['tipo'])
+            )
             ->when(
                 isset($this->data['cliente_id']),
                 fn($query) => $query->where('cliente_id', $this->data['cliente_id'])
@@ -148,6 +155,9 @@ class ReporteTransaccionesFinancieras extends Page implements HasForms, HasTable
             );
 
         $this->registros = $query->get();
-        $this->totalMonto = $this->registros->sum('monto');
+        
+        // Calcular totales separados por tipo
+        $this->totalDepositos = $this->registros->where('tipo', 'deposito')->sum('monto');
+        $this->totalRetiros = $this->registros->where('tipo', 'retiro')->sum('monto');
     }
 }

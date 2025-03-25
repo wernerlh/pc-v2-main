@@ -27,9 +27,9 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
     protected static ?string $title = 'Reporte de Transacciones en Casino Físico';
     protected static ?string $navigationGroup = 'Reportes';
     protected static ?int $navigationSort = 8;
-    
+
     protected static string $view = 'filament.sistemacasino.pages.reporte-transacciones-casino';
-    
+
     public ?array $data = [];
     public $registros = [];
     public $totalDepositos = 0;
@@ -42,7 +42,7 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
             'fecha_inicio' => now()->startOfMonth()->format('Y-m-d'),
             'fecha_fin' => now()->format('Y-m-d'),
         ]);
-        
+
         // Inicializar registros como array vacío
         $this->registros = [];
     }
@@ -57,14 +57,14 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
                     ->searchable()
                     ->preload()
                     ->placeholder('Todos los clientes'),
-                
+
                 Select::make('sucursal_id')
                     ->label('Sucursal')
                     ->options(Sucursales::query()->pluck('nombre', 'id'))
                     ->searchable()
                     ->preload()
                     ->placeholder('Todas las sucursales'),
-                
+
                 Select::make('tipo')
                     ->label('Tipo de transacción')
                     ->options([
@@ -74,12 +74,12 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
                     ])
                     ->default('todos')
                     ->required(),
-                
+
                 DatePicker::make('fecha_inicio')
                     ->label('Desde')
                     ->required()
                     ->default(now()->startOfMonth()),
-                
+
                 DatePicker::make('fecha_fin')
                     ->label('Hasta')
                     ->required()
@@ -96,19 +96,19 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
                 TransaccionesCasinoP::query()
                     ->when(
                         isset($this->data['cliente_id']),
-                        fn ($query) => $query->where('cliente_id', $this->data['cliente_id'])
+                        fn($query) => $query->where('cliente_id', $this->data['cliente_id'])
                     )
                     ->when(
                         isset($this->data['sucursal_id']),
-                        fn ($query) => $query->where('sucursal_id', $this->data['sucursal_id'])
+                        fn($query) => $query->where('sucursal_id', $this->data['sucursal_id'])
                     )
                     ->when(
                         isset($this->data['tipo']) && $this->data['tipo'] !== 'todos',
-                        fn ($query) => $query->where('tipo', $this->data['tipo'])
+                        fn($query) => $query->where('tipo', $this->data['tipo'])
                     )
                     ->when(
                         isset($this->data['fecha_inicio']) && isset($this->data['fecha_fin']),
-                        fn ($query) => $query->whereBetween('fecha', [
+                        fn($query) => $query->whereBetween('fecha', [
                             $this->data['fecha_inicio'],
                             $this->data['fecha_fin']
                         ])
@@ -118,41 +118,41 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
                 TextColumn::make('id')
                     ->label('ID')
                     ->sortable(),
-                
+
                 TextColumn::make('cliente.nombre_completo')
                     ->label('Cliente')
                     ->sortable()
                     ->searchable(),
-                
+
                 TextColumn::make('sucursal.nombre')
                     ->label('Sucursal')
                     ->sortable(),
-                
+
                 TextColumn::make('tipo')
                     ->label('Tipo')
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state))
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'deposito' => 'success',
                         'retiro' => 'warning',
                         default => 'gray',
                     })
                     ->sortable(),
-                
+
                 TextColumn::make('monto')
                     ->label('Monto')
                     ->money('PEN')
                     ->sortable(),
-                
+
                 TextColumn::make('fecha')
                     ->label('Fecha')
                     ->date('d/m/Y')
                     ->sortable(),
-                
+
                 TextColumn::make('metodo_pago')
                     ->label('Método de Pago')
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
-                
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
+
                 TextColumn::make('referencia')
                     ->label('Referencia')
                     ->limit(20),
@@ -163,35 +163,35 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
     public function generarReporte()
     {
         $this->validate();
-        
+
         $query = TransaccionesCasinoP::with(['cliente', 'sucursal'])
             ->when(
                 isset($this->data['cliente_id']),
-                fn ($query) => $query->where('cliente_id', $this->data['cliente_id'])
+                fn($query) => $query->where('cliente_id', $this->data['cliente_id'])
             )
             ->when(
                 isset($this->data['sucursal_id']),
-                fn ($query) => $query->where('sucursal_id', $this->data['sucursal_id'])
+                fn($query) => $query->where('sucursal_id', $this->data['sucursal_id'])
             )
             ->when(
                 isset($this->data['tipo']) && $this->data['tipo'] !== 'todos',
-                fn ($query) => $query->where('tipo', $this->data['tipo'])
+                fn($query) => $query->where('tipo', $this->data['tipo'])
             )
             ->when(
                 isset($this->data['fecha_inicio']) && isset($this->data['fecha_fin']),
-                fn ($query) => $query->whereBetween('fecha', [
+                fn($query) => $query->whereBetween('fecha', [
                     $this->data['fecha_inicio'],
                     $this->data['fecha_fin']
                 ])
             );
-            
+
         $this->registros = $query->get();
-        
+
         // Calcular totales separados
         $this->totalDepositos = $this->registros
             ->where('tipo', 'deposito')
             ->sum('monto');
-            
+
         $this->totalRetiros = $this->registros
             ->where('tipo', 'retiro')
             ->sum('monto');

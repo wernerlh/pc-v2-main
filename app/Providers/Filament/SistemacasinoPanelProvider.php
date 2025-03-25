@@ -23,6 +23,7 @@ use App\Filament\Sistemacasino\Pages\SistemaDashboard;
 use App\Filament\Sistemacasino\Pages\ReporteAsistencia;
 use App\Filament\Sistemacasino\Pages\ReporteTransaccionesFinancieras;
 use App\Filament\Sistemacasino\Pages\ReporteTransaccionesCasino;
+use App\Filament\Sistemacasino\Pages\ReportePerdidaGananciaCliente;
 
 class SistemacasinoPanelProvider extends PanelProvider
 {
@@ -43,11 +44,12 @@ class SistemacasinoPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
 
             ->pages([
-                SistemaDashboard::class, // Reemplaza el Dashboard predeterminado
+                SistemaDashboard::class,
                 CambiarContrasenaEmpleado::class,
                 ReporteAsistencia::class,
                 ReporteTransaccionesFinancieras::class,
                 ReporteTransaccionesCasino::class,
+                ReportePerdidaGananciaCliente::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([

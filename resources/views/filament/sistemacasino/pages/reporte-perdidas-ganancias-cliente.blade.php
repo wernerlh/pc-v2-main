@@ -1,4 +1,3 @@
-<!-- filepath: resources/views/filament/sistemacasino/pages/reporte-asistencia.blade.php -->
 <x-filament-panels::page>
     <style>
         @media print {
@@ -58,7 +57,7 @@
 
     <div class="space-y-6">
         <div class="p-6 bg-white rounded-xl shadow dark:bg-gray-800 no-print">
-            <h2 class="text-xl font-bold mb-4">Filtrar Asistencia de Empleados</h2>
+            <h2 class="text-xl font-bold mb-4">Filtrar Pérdidas y Ganancias de Clientes</h2>
             <form wire:submit="generarReporte">
                 {{ $this->form }}
                 
@@ -70,7 +69,7 @@
             </form>
         </div>
         
-        @if(isset($data['empleado_id']) && count($registros) > 0)
+        @if(isset($data['fecha_inicio']) && count($registros) > 0)
             <div id="seccion-resultados" class="p-6 bg-white rounded-xl shadow dark:bg-gray-800">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-bold">Resultados</h2>
@@ -87,14 +86,19 @@
                 </div>
                 
                 <div class="mb-4 print-block">
-                    <h1 class="text-2xl font-bold text-center">Reporte de Asistencia de Empleados</h1>
+                    <h1 class="text-2xl font-bold text-center">Reporte de Pérdidas y Ganancias</h1>
                     <p class="text-center text-gray-500">
                         Período: {{ \Carbon\Carbon::parse($data['fecha_inicio'])->format('d/m/Y') }} - 
                         {{ \Carbon\Carbon::parse($data['fecha_fin'])->format('d/m/Y') }}
                     </p>
-                    @if(isset($data['empleado_id']))
+                    @if(isset($data['cliente_id']) && $data['cliente_id'])
                         <p class="text-center text-gray-500">
-                            Empleado: {{ \App\Models\Empleados::find($data['empleado_id'])->nombre_completo }}
+                            Cliente: {{ \App\Models\UserCliente::find($data['cliente_id'])->nombre_completo }}
+                        </p>
+                    @endif
+                    @if(isset($data['juego_id']) && $data['juego_id'])
+                        <p class="text-center text-gray-500">
+                            Juego: {{ \App\Models\JuegosOnline::find($data['juego_id'])->nombre }}
                         </p>
                     @endif
                 </div>
@@ -102,25 +106,25 @@
                 {{ $this->table }}
                 
                 <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 totales-separados">
-                    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-lg text-blue-700 dark:text-blue-400">Total Horas Trabajadas:</span>
-                            <span class="font-bold text-xl text-blue-700 dark:text-blue-400">{{ number_format($totalHoras, 2) }} hrs</span>
+                            <span class="font-bold text-lg text-red-700 dark:text-red-400">Total Pérdidas:</span>
+                            <span class="font-bold text-xl text-red-700 dark:text-red-400">S/ {{ number_format($totalPerdidas, 2) }}</span>
                         </div>
                     </div>
                     
                     <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-lg text-green-700 dark:text-green-400">Días Trabajados:</span>
-                            <span class="font-bold text-xl text-green-700 dark:text-green-400">{{ $registros->where('estado', 'PRESENTE')->count() }} días</span>
+                            <span class="font-bold text-lg text-green-700 dark:text-green-400">Total Ganancias:</span>
+                            <span class="font-bold text-xl text-green-700 dark:text-green-400">S/ {{ number_format($totalGanancias, 2) }}</span>
                         </div>
                     </div>
                 </div>
             </div>
-        @elseif(isset($data['empleado_id']) && count($registros) === 0)
+        @elseif(isset($data['fecha_inicio']) && count($registros) === 0)
             <div class="p-6 bg-white rounded-xl shadow dark:bg-gray-800 no-print">
                 <div class="text-center py-4">
-                    <p class="text-gray-500 dark:text-gray-400">No se encontraron registros de asistencia con los filtros seleccionados.</p>
+                    <p class="text-gray-500 dark:text-gray-400">No se encontraron transacciones con los filtros seleccionados.</p>
                 </div>
             </div>
         @endif
@@ -138,16 +142,17 @@
                 header.style.padding = '10px';
                 header.style.borderBottom = '1px solid #ddd';
                 
-                // Obtener información del empleado
-                const empleadoSelect = document.querySelector('select[name="data.empleado_id"]');
-                const empleadoNombre = empleadoSelect && empleadoSelect.selectedIndex > 0 ? 
-                    empleadoSelect.options[empleadoSelect.selectedIndex].text : 'Empleado';
+                // Obtener información del cliente y juego
+                const clienteSelect = document.querySelector('select[name="data.cliente_id"]');
+                const clienteNombre = clienteSelect && clienteSelect.selectedIndex > 0 ? 
+                    clienteSelect.options[clienteSelect.selectedIndex].text : 'Todos los clientes';
+                
+                const juegoSelect = document.querySelector('select[name="data.juego_id"]');
+                const juegoNombre = juegoSelect && juegoSelect.selectedIndex > 0 ? 
+                    juegoSelect.options[juegoSelect.selectedIndex].text : 'Todos los juegos';
                 
                 const fechaInicio = document.querySelector('input[name="data.fecha_inicio"]')?.value || '';
                 const fechaFin = document.querySelector('input[name="data.fecha_fin"]')?.value || '';
-                
-                // Crear contenido de la cabecera
-
                 
                 const resultados = document.getElementById('seccion-resultados');
                 if (resultados) {
