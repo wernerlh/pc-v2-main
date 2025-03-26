@@ -148,14 +148,6 @@ class ReporteTransaccionesCasino extends Page implements HasForms, HasTable
                     ->label('Fecha')
                     ->date('d/m/Y')
                     ->sortable(),
-
-                TextColumn::make('metodo_pago')
-                    ->label('Método de Pago')
-                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
-
-                TextColumn::make('referencia')
-                    ->label('Referencia')
-                    ->limit(20),
             ])
             ->defaultSort('fecha', 'desc');
     }
