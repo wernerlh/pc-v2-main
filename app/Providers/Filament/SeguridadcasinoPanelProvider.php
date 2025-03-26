@@ -26,6 +26,8 @@ class SeguridadcasinoPanelProvider extends PanelProvider
             ->id('seguridadcasino')
             ->path('seguridadcasino')
             ->login()
+            ->brandName('Casino AC')  // Cambia esto por el nombre que desees
+            ->homeUrl('/sistemacasino')  // Este método establece la URL de la página de inicio
             ->colors([
                 'primary' => Color::Red,
             ])
@@ -36,7 +38,7 @@ class SeguridadcasinoPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Seguridadcasino/Resources'), for: 'App\\Filament\\Seguridadcasino\\Resources')
             ->discoverPages(in: app_path('Filament/Seguridadcasino/Pages'), for: 'App\\Filament\\Seguridadcasino\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+
             ])
             ->discoverWidgets(in: app_path('Filament/Seguridadcasino/Widgets'), for: 'App\\Filament\\Seguridadcasino\\Widgets')
             ->widgets([

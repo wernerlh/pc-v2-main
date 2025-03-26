@@ -1,5 +1,41 @@
 <!-- ==========Header Section Starts Here========== -->
 <header class="header-section">
+    @php
+        $banner = \App\Models\Banner::getActiveBanner();
+
+        // Mapeo de colores a clases de Bootstrap
+        $colorClasses = [
+            'primary' => 'bg-primary text-white',
+            'secondary' => 'bg-secondary text-white',
+            'success' => 'bg-success text-white',
+            'warning' => 'bg-warning text-dark',
+            'danger' => 'bg-danger text-white',
+            'info' => 'bg-info text-dark',
+        ];
+
+        // Obtener la clase de color correspondiente o usar una por defecto
+        $colorClass = isset($colorClasses[$banner->color ?? ''])
+            ? $colorClasses[$banner->color]
+            : 'bg-primary text-white';
+    @endphp
+
+    @if ($banner)
+        <!-- Banner informativo -->
+        <div class="banner-info {{ $colorClass }}" style="padding: 8px 0; text-align: center; font-weight: 500;">
+            <div class="container">
+                <div class="d-flex align-items-center justify-content-center">
+                    @if ($banner->icono)
+                        @if (str_starts_with($banner->icono, 'heroicon-'))
+                            @svg($banner->icono, 'me-2', ['width' => 20, 'height' => 20])
+                        @else
+                            <i class="icofont-{{ $banner->icono }} me-2"></i>
+                        @endif
+                    @endif
+                    <span>{!! $banner->contenido !!}</span>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="container">
         <div class="header-holder d-flex flex-wrap justify-content-between align-items-center">
             <div class="brand-logo d-none d-lg-inline-block">

@@ -34,6 +34,8 @@ class SistemacasinoPanelProvider extends PanelProvider
             ->id('sistemacasino')
             ->path('sistemacasino')
             ->login()
+            ->brandName('Casino AC')  // Cambia esto por el nombre que desees
+            ->homeUrl('/')  // Este método establece la URL de la página de inicio
             ->colors([
                 'primary' => Color::Amber,
             ])

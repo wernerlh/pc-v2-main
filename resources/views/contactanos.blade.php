@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Contacto - Casina')
+@section('title', 'Contacto - casino')
 
 @section('content')
     <!-- ===========Sección Banner comienza aquí========== -->
@@ -53,10 +53,10 @@
                             </div>
                             <div class="contact-content">
                                 <h4>Correo Electrónico</h4>
-                                <p>Información General: <a href="mailto:info@casina.com">info@casina.com</a></p>
-                                <p>Servicio al Cliente: <a href="mailto:atencion@casina.com">atencion@casina.com</a></p>
-                                <p>Departamento VIP: <a href="mailto:vip@casina.com">vip@casina.com</a></p>
-                                <p>Eventos y Promociones: <a href="mailto:eventos@casina.com">eventos@casina.com</a></p>
+                                <p>Información General: <a href="mailto:info@casino.com">info@casino.com</a></p>
+                                <p>Servicio al Cliente: <a href="mailto:atencion@casino.com">atencion@casino.com</a></p>
+                                <p>Departamento VIP: <a href="mailto:vip@casino.com">vip@casino.com</a></p>
+                                <p>Eventos y Promociones: <a href="mailto:eventos@casino.com">eventos@casino.com</a></p>
                             </div>
                         </div>
                     </div>

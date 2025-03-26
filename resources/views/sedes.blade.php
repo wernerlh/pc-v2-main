@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sedes - Casina')
+@section('title', 'Sedes - casino')
 
 @section('content')
     <!-- ===========Sección Banner comienza aquí========== -->

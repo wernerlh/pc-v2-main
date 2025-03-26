@@ -35,6 +35,8 @@ class UsuariocasinoPanelProvider extends PanelProvider
             ->path('usuariocasino')
             ->login()
             ->registration(RegisterUserCliente::class) // Usar la clase correcta
+            ->brandName('Casino AC')  // Cambia esto por el nombre que desees
+            ->homeUrl('/')  // Este método establece la URL de la página de inicio
             ->colors([
                 'primary' => Color::Blue,
             ])
